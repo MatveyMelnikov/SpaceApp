@@ -8,8 +8,7 @@ class OpenAstronomyPictureUseCase(private val repository: AstronomyPictureReposi
     suspend fun execute(param: AstronomyPictureParam) : AstronomyPicture {
         if (!param.isCorrect())
             throw IllegalArgumentException()
-
-        val drawable = repository.loadPucture(param) ?: throw NullPointerException()
-        return AstronomyPicture(drawable, repository.loadExplanation(param))
+        
+        return repository.loadPucture(param) ?: throw NullPointerException()
     }
 }
