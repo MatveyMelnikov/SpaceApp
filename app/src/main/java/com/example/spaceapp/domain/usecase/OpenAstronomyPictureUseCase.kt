@@ -5,10 +5,10 @@ import com.example.spaceapp.domain.model.AstronomyPictureParam
 import com.example.spaceapp.domain.repository.AstronomyPictureRepository
 
 class OpenAstronomyPictureUseCase(private val repository: AstronomyPictureRepository) {
-    suspend fun execute(param: AstronomyPictureParam) : AstronomyPicture {
+    suspend fun execute(param: AstronomyPictureParam) : AstronomyPicture? {
         if (!param.isCorrect())
             throw IllegalArgumentException()
         
-        return repository.loadPucture(param) ?: throw NullPointerException()
+        return repository.loadPucture(param)
     }
 }

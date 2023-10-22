@@ -1,41 +1,61 @@
 package com.example.spaceapp.data.storage
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
+import android.util.Log
+import com.example.spaceapp.R
 import com.example.spaceapp.data.storage.model.AstronomyPictureData
 import com.example.spaceapp.data.storage.model.AstronomyPictureDataParam
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.example.spaceapp.data.storage.retrofit.RetrofitInstance
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
+import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
-class NASAAstronomyPictureStorage : AstronomyPictureStorage {
-    override suspend fun load(param: AstronomyPictureDataParam): AstronomyPictureData {
-        val testUrl = "https://apod.nasa.gov/apod/image/2310/AnnularProposal_Zhang_960.jpg"
+const val PICTURE_TAG = "NASAAstronomyPictureStorage"
 
-        var drawable: Drawable? = null
-        val job = GlobalScope.launch {
-            val connection = URL(testUrl).openConnection() as HttpURLConnection
-            connection.setRequestProperty("User-agent", "Mozilla/4.0")
-
-            connection.connect()
-            val input = connection.inputStream
-
-            val bitmap = BitmapFactory.decodeStream(input)
-            drawable = BitmapDrawable(Resources.getSystem(), bitmap)
+class NASAAstronomyPictureStorage(
+    private val context: Context
+) : AstronomyPictureStorage {
+    override suspend fun load(param: AstronomyPictureDataParam): AstronomyPictureData? {
+        val response = try {
+            RetrofitInstance.astronomyPictureApi.getPicture(context.getString(R.string.api_key))
+        } catch (e: IOException) {
+            Log.e(PICTURE_TAG, "IOException, you might not have internet connection")
+            return null
+        } catch (e: HttpException) {
+            Log.e(PICTURE_TAG, "HttpException, unexpected response")
+            return null
         }
 
-        job.join()
+        if (!response.isSuccessful || response.body() == null)
+            return null
+
+        val drawable = try {
+            withContext(Dispatchers.IO) {
+                val connection = URL(response.body()!!.url).openConnection() as HttpURLConnection
+                connection.setRequestProperty("User-agent", "Mozilla/4.0")
+
+                connection.connect()
+                val input = connection.inputStream
+
+                val bitmap = BitmapFactory.decodeStream(input)
+                BitmapDrawable(Resources.getSystem(), bitmap)
+            }
+        } catch (e: Exception) {
+            Log.e(PICTURE_TAG, "Exception, ${e.message}")
+            return null
+        }
 
         return AstronomyPictureData(
             drawable,
-            "Yes, but can your tree do this?  If you look closely at the ground in the " +
-                    "featured image, you will see many images of yesterday's solar eclipse -- " +
-                    "created by a tree. Gaps between tree leaves act like pinhole lenses and each " +
-                    "create a small image of the partially eclipsed Sun visible in the other " +
-                    "direction."
+            response.body()!!.explanation,
+            response.body()!!.title
         )
     }
 }

@@ -11,7 +11,7 @@ import com.example.spaceapp.domain.repository.AstronomyPictureRepository
 class AstronomyPictureRepositoryImpl(
     private val storage: AstronomyPictureStorage
 ) : AstronomyPictureRepository {
-    override suspend fun loadPucture(param: AstronomyPictureParam) : AstronomyPicture {
+    override suspend fun loadPucture(param: AstronomyPictureParam) : AstronomyPicture? {
         return mapToDomain(storage.load(mapToStorage(param)))
     }
 
@@ -19,7 +19,10 @@ class AstronomyPictureRepositoryImpl(
         return AstronomyPictureDataParam(param.date, param.count)
     }
 
-    private fun mapToDomain(result: AstronomyPictureData) : AstronomyPicture {
-        return AstronomyPicture(result.drawable, result.explanation)
+    private fun mapToDomain(result: AstronomyPictureData?) : AstronomyPicture? {
+        return if (result == null)
+            null
+        else
+            AstronomyPicture(result.drawable, result.explanation, result.title)
     }
 }

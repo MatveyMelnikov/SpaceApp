@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.spaceapp.databinding.FragmentAstronomyPictureOfTheDayBinding
 import com.example.spaceapp.domain.model.AstronomyPictureParam
 import com.example.spaceapp.presantation.viewmodel.AstronomyPictureViewModel
+import com.example.spaceapp.presantation.viewmodel.AstronomyPictureViewModelFactory
 import java.time.LocalDate
 
 class AstronomyPictureOfTheDayFragment : Fragment() {
@@ -25,11 +26,17 @@ class AstronomyPictureOfTheDayFragment : Fragment() {
             false
         )
 
-        viewModel = ViewModelProvider(requireActivity())[AstronomyPictureViewModel::class.java]
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            AstronomyPictureViewModelFactory(requireContext())
+        )[AstronomyPictureViewModel::class.java]
 
         viewModel.astronomyPicture.observe(requireActivity()) {
             binding.imageView3.setImageDrawable(it.picture)
             binding.description.text = it.description
+            binding.descriptionTitle.text = it.title
+
+            binding.progressBar.visibility = View.GONE
         }
 
         viewModel.loadPicture(AstronomyPictureParam(LocalDate.now(), 1))

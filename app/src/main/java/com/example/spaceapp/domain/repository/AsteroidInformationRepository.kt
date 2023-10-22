@@ -4,5 +4,5 @@ import com.example.spaceapp.domain.model.AsteroidInformation
 import com.example.spaceapp.domain.model.AsteroidInformationParam
 
 interface AsteroidInformationRepository {
-    fun loadInformation(param: AsteroidInformationParam) : AsteroidInformation
+    suspend fun loadInformation(param: AsteroidInformationParam) : List<AsteroidInformation>?
 }

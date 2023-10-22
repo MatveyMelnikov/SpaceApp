@@ -5,7 +5,7 @@ import com.example.spaceapp.domain.model.AsteroidInformationParam
 import com.example.spaceapp.domain.repository.AsteroidInformationRepository
 
 class OpenAsteroidInformationUseCase(private val repository: AsteroidInformationRepository) {
-    fun execute(param: AsteroidInformationParam) : AsteroidInformation {
+    suspend fun execute(param: AsteroidInformationParam) : List<AsteroidInformation>? {
         if (!param.isCorrect())
             throw IllegalArgumentException();
 

@@ -6,5 +6,4 @@ import com.example.spaceapp.domain.model.AstronomyPictureParam
 
 interface AstronomyPictureRepository {
     suspend fun loadPucture(param: AstronomyPictureParam) : AstronomyPicture?
-//    fun loadExplanation(param: AstronomyPictureParam) : String
 }

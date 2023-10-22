@@ -1,5 +1,6 @@
 package com.example.spaceapp.presantation.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,19 +11,15 @@ import com.example.spaceapp.domain.model.AstronomyPictureParam
 import com.example.spaceapp.domain.usecase.OpenAstronomyPictureUseCase
 import kotlinx.coroutines.launch
 
-class AstronomyPictureViewModel : ViewModel() {
+class AstronomyPictureViewModel(
+    private val openAstronomyPictureUseCase: OpenAstronomyPictureUseCase
+) : ViewModel() {
     val astronomyPicture = MutableLiveData<AstronomyPicture>()
-
-    private val astronomyPictureRepository by lazy(LazyThreadSafetyMode.NONE) {
-        AstronomyPictureRepositoryImpl(NASAAstronomyPictureStorage())
-    }
-    private val openAstronomyPictureUseCase by lazy(LazyThreadSafetyMode.NONE) {
-        OpenAstronomyPictureUseCase(astronomyPictureRepository)
-    }
 
     fun loadPicture(param: AstronomyPictureParam) {
         viewModelScope.launch {
-            astronomyPicture.value = openAstronomyPictureUseCase.execute(param)
+            val data = openAstronomyPictureUseCase.execute(param) ?: return@launch
+            astronomyPicture.value = data
         }
     }
 }

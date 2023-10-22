@@ -2,4 +2,5 @@
     <string name="app_name">SpaceApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="api_key">b2HlE8cQd5OyWXtZueiAY1IrfRcxs1UbcpUyTfzI</string>
 </resources>

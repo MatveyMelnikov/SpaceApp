@@ -4,5 +4,5 @@ import com.example.spaceapp.data.storage.model.AstronomyPictureData
 import com.example.spaceapp.data.storage.model.AstronomyPictureDataParam
 
 interface AstronomyPictureStorage {
-    suspend fun load(param: AstronomyPictureDataParam) : AstronomyPictureData
+    suspend fun load(param: AstronomyPictureDataParam) : AstronomyPictureData?
 }

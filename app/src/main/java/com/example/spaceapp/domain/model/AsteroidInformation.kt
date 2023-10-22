@@ -4,11 +4,10 @@ import java.time.LocalDateTime
 
 class AsteroidInformation(
     val name: String,
-    val asteroidClass: String,
-    val solutionDate: LocalDateTime,
-    val dataArcSpan: Int,
-    val planetaryEphem: String,
-    val sbEphem: String,
-    val conditionCode: Int
+    val diameterMax: Double,
+    val isPotentiallyHazardous: Boolean,
+    val relativeVelocity: Double,
+    val missDistance: Double,
+    val closeApproachDate: LocalDateTime
 ) {
 }
