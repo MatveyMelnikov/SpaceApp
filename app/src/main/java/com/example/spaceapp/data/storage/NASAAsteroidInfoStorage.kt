@@ -8,20 +8,12 @@ import com.example.spaceapp.data.storage.model.AsteroidInfoParamData
 import com.example.spaceapp.data.storage.retrofit.RetrofitInstance
 import retrofit2.HttpException
 import java.io.IOException
+import java.time.LocalDate
 
 const val ASTEROID_TAG = "NASAAsteroidInfoStorage"
 
 class NASAAsteroidInfoStorage(private val context: Context) : AsteroidInfoStorage {
     override suspend fun load(param: AsteroidInfoParamData): List<AsteroidInfoData>? {
-//        return AsteroidInfoData(
-//            "2008 QV11", "Aten [NEO]",
-//            LocalDateTime.of(2021, 8, 21, 5, 48, 55),
-//            4739,
-//            "DE441",
-//            "SB441-N16",
-//            0
-//        )
-
         val response = try {
             RetrofitInstance.asteroidInfoApi.getAsteroidInfo(
                 context.getString(R.string.api_key),
@@ -57,5 +49,9 @@ class NASAAsteroidInfoStorage(private val context: Context) : AsteroidInfoStorag
         }
 
         return result.toList()
+    }
+
+    override suspend fun save(date: LocalDate, data: List<AsteroidInfoData>) {
+        TODO("Not yet implemented")
     }
 }

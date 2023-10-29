@@ -6,19 +6,25 @@ import com.example.spaceapp.data.storage.model.AsteroidInfoParamData
 import com.example.spaceapp.domain.model.AsteroidInformation
 import com.example.spaceapp.domain.model.AsteroidInformationParam
 import com.example.spaceapp.domain.repository.AsteroidInformationRepository
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class AsteroidInformationRepositoryImp(
-    private val storage: AsteroidInfoStorage
+    private val externalStorage: AsteroidInfoStorage,
+    private val localStorage: AsteroidInfoStorage,
 ) : AsteroidInformationRepository {
     override suspend fun loadInformation(
         param: AsteroidInformationParam
     ) : List<AsteroidInformation>? {
-        return mapToDomain(storage.load(mapToStorage(param)))
+        val internalParams = mapToStorage(param)
+        val result = externalStorage.load(internalParams) ?:
+            localStorage.load(internalParams)
+
+        if (result != null)
+            localStorage.save(param.startDate, result)
+
+        return mapToDomain(result)
     }
 
     private fun mapToStorage(param: AsteroidInformationParam) : AsteroidInfoParamData {

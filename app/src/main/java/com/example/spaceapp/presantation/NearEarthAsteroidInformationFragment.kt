@@ -91,12 +91,6 @@ class NearEarthAsteroidInformationFragment : Fragment() {
         )
 
         mDatePicker.show()
-        mDatePicker.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.blizzard))
-
-        mDatePicker.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.blizzard))
-
     }
 
     companion object {
