@@ -5,15 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.example.spaceapp.databinding.FragmentAstronomyPictureOfTheDayBinding
 import com.example.spaceapp.domain.model.AstronomyPictureParam
 import com.example.spaceapp.presantation.viewmodel.AstronomyPictureViewModel
-import com.example.spaceapp.presantation.viewmodel.AstronomyPictureViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 
 class AstronomyPictureOfTheDayFragment : Fragment() {
-    private lateinit var viewModel: AstronomyPictureViewModel
+    private val viewModel by viewModel<AstronomyPictureViewModel>()
     private lateinit var binding: FragmentAstronomyPictureOfTheDayBinding
 
     override fun onCreateView(
@@ -25,11 +24,6 @@ class AstronomyPictureOfTheDayFragment : Fragment() {
             container,
             false
         )
-
-        viewModel = ViewModelProvider(
-            requireActivity(),
-            AstronomyPictureViewModelFactory(requireContext())
-        )[AstronomyPictureViewModel::class.java]
 
         viewModel.astronomyPicture.observe(requireActivity()) {
             binding.imageView3.setImageDrawable(it.picture)

@@ -1,6 +1,5 @@
 package com.example.spaceapp.presantation
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,15 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.spaceapp.R
 import com.example.spaceapp.databinding.FragmentNearEarthAsteroidInformationBinding
 import com.example.spaceapp.domain.model.AsteroidInformationParam
 import com.example.spaceapp.presantation.viewmodel.AsteroidInfoViewModel
-import com.example.spaceapp.presantation.viewmodel.AsteroidInfoViewModelFactory
-import java.text.SimpleDateFormat
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -24,7 +19,7 @@ import java.util.Calendar
 import java.util.Locale
 
 class NearEarthAsteroidInformationFragment : Fragment() {
-    private lateinit var viewModel: AsteroidInfoViewModel
+    private val viewModel by viewModel<AsteroidInfoViewModel>()
     private lateinit var binding: FragmentNearEarthAsteroidInformationBinding
 
     private val currentDate: Calendar = Calendar.getInstance()
@@ -45,11 +40,6 @@ class NearEarthAsteroidInformationFragment : Fragment() {
             container,
             false
         )
-
-        viewModel = ViewModelProvider(
-            requireActivity(),
-            AsteroidInfoViewModelFactory(requireContext())
-        )[AsteroidInfoViewModel::class.java]
 
         binding.asteroidsList.adapter = AsteroidRecyclerAdapter(requireContext())
         binding.asteroidsList.layoutManager = LinearLayoutManager(requireActivity())
